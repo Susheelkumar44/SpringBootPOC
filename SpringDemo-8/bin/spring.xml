@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+ 
+ <beans>
+   
+ 	<bean id="triangle" class="org.codingtointerface.example.Triangle" autowire="byName" scope="singleton">
+ 
+ 	</bean>
+ 	
+ 	<!-- for (0,0) points -->
+ 	<bean id="pointA" class="org.codingtointerface.example.Point">
+ 		<property name="x" value="0" />
+ 		<property name="y" value="0" />
+ 	</bean>
+ 	
+ 	<!-- for (-20,0) points -->
+ 	<bean id="pointB" class="org.codingtointerface.example.Point">
+ 		<property name="x" value="-20" />
+ 		<property name="y" value="0" />
+ 	</bean>
+ 	
+ 	<!-- for (0,20) points -->
+ 	<bean id="pointC" class="org.codingtointerface.example.Point">
+ 		<property name="x" value="0" />
+ 		<property name="y" value="40" />
+ 	</bean>
+ 	
+ 	<bean id="circle" class="org.codingtointerface.example.Circle">
+ 		<property name="center" ref="pointA"></property>
+ 	</bean>
+ 	
+ </beans>

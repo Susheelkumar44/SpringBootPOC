@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+ 
+ <beans>
+    <!-- Here we are directing spring to autowire by name i.e, if we have name pointA in triangle class and bean in xml file
+    with the same name, we can use autowire property to configure beans by spring rather than doing it manually.  
+    Also we can specify bean scope-->
+ 	<bean id="triangle" class="org.autowiring.example.Triangle" autowire="byName" scope="singleton">
+ 	
+ 	<!-- <bean id="triangle" class="org.autowiring.example.Triangle" autowire="byType" > 
+ 	Above way of doing autowiring can be done, if we have only one bean, and it uses type of the bean to autowire. i.e., in our
+ 	example if we have only pointA, then spring autowires based on type i.e, of type point class.-->
+ 	
+ 	<!-- <bean id="triangle" class="org.autowiring.example.Triangle" autowire="constructor" >
+ 	Above way is like byType autowriring only, but the difference is instead of setter injection, constructor injection will be used -->
+ 	</bean>
+ 	
+ 	<!-- for (0,0) points -->
+ 	<bean id="pointA" class="org.autowiring.example.Point">
+ 		<property name="x" value="0" />
+ 		<property name="y" value="0" />
+ 	</bean>
+ 	
+ 	<!-- for (-20,0) points -->
+ 	<bean id="pointB" class="org.autowiring.example.Point">
+ 		<property name="x" value="-20" />
+ 		<property name="y" value="0" />
+ 	</bean>
+ 	
+ 	<!-- for (0,20) points -->
+ 	<bean id="pointC" class="org.autowiring.example.Point">
+ 		<property name="x" value="0" />
+ 		<property name="y" value="40" />
+ 	</bean>
+ 	
+ </beans>

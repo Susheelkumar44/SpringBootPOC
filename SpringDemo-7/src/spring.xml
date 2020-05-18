@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+ 
+ <beans>
+   
+   <!-- If we define bean triangle as single ton, then the beans pointA,B,C will also be singleton, even though if define 
+   pointA,B,C as prototype, because we have mentioned triangle as single ton and it has dependencies on pointA,B,C, all these
+   beans will also be created with triangle bean when application context is initalized, so inorder to get the bean details 
+   any where in the project we can use application context aware, see traingle class for implementation -->
+   <!-- We can also specify init method to be called before bean is created -->
+ 	<bean id="triangle" class="org.applicationcontextaware.example.Triangle" autowire="byName" scope="singleton"
+ 	init-method="myInit">
+ 
+ 	</bean>
+ 	
+ 	<!-- for (0,0) points -->
+ 	<bean id="pointA" class="org.applicationcontextaware.example.Point">
+ 		<property name="x" value="0" />
+ 		<property name="y" value="0" />
+ 	</bean>
+ 	
+ 	<!-- for (-20,0) points -->
+ 	<bean id="pointB" class="org.applicationcontextaware.example.Point">
+ 		<property name="x" value="-20" />
+ 		<property name="y" value="0" />
+ 	</bean>
+ 	
+ 	<!-- for (0,20) points -->
+ 	<bean id="pointC" class="org.applicationcontextaware.example.Point">
+ 		<property name="x" value="0" />
+ 		<property name="y" value="40" />
+ 	</bean>
+ 	
+ </beans>
