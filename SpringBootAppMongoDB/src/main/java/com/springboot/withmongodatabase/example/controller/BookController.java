@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -16,10 +17,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import org.json.simple.JSONObject;
 import com.springboot.withmongodatabase.example.model.Book;
+import com.springboot.withmongodatabase.example.model.Response;
 import com.springboot.withmongodatabase.example.service.BookService;
 
+import io.swagger.annotations.ApiOperation;
+
 @RestController
+@RequestMapping("/books")
 public class BookController {
+	
 	
 	@Autowired
 	private BookService bookService;
@@ -29,7 +35,9 @@ public class BookController {
 	
 	
 	@SuppressWarnings("unchecked")
-	@PostMapping("/books")
+	@PostMapping("")
+	@ApiOperation(value="Inserts New Book Details into Book Repository",
+				  response=Response.class)
 	public JSONObject savebook(@RequestBody Book book) {
 		Book returnedResp = bookService.AddBooks(book);
 		if (returnedResp == null) {
@@ -43,18 +51,24 @@ public class BookController {
 		return responseObj;
 	}
 	
-	@RequestMapping("/books")
+	@GetMapping("")
+	@ApiOperation(value="Gets all Book Details from Book Repository",
+	  response=Book.class)
 	public List<Book> getAllBooks() {
 		return bookService.getAllBooks();
 	}
 	
-	@RequestMapping("/books/{id}")
+	@GetMapping("/{id}")
+	@ApiOperation(value="Find Books by book ID",
+	  response=Book.class)
 	public Optional<Book> getBookById(@PathVariable String id) {
 		return bookService.getBookById(id);
 	}
 	
 	
-	@PutMapping("/books/{id}")
+	@PutMapping("/{id}")
+	@ApiOperation(value="Update Book Details By Book ID",
+	  response=Response.class)
 	public JSONObject update(@PathVariable String id, @RequestBody Book book) {
 		if (!this.getBookById(id).isPresent()) {
 			responseHeaders.set("Status", "404 NOT_FOUND");
@@ -69,7 +83,9 @@ public class BookController {
 		return this.ResponseGenerator(200, HttpStatus.OK, "Successfull");
 	}
 	
-	@DeleteMapping("/books/{id}")
+	@DeleteMapping("/{id}")
+	@ApiOperation(value="Delete Book Details By Book ID",
+	  response=Response.class)
 	public JSONObject delete(@PathVariable String id) {
 		if (!this.getBookById(id).isPresent()) {
 			responseHeaders.set("Status", "404 NOT_FOUND");

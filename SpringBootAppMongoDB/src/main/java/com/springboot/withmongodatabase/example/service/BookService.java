@@ -48,6 +48,7 @@ public class BookService {
 		return bookRepo.findById(id);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public int updateBookDetails(String id, Book book) {
 		
 		try {
