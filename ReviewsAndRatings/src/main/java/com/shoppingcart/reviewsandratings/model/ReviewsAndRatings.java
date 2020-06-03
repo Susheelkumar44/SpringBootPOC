@@ -11,6 +11,7 @@ public class ReviewsAndRatings {
 	@Id
 	private String id;
 	private String productID;
+	//private float avgRating;
 	private List<ReviewAndRateList> reviews;
 	
 	public ReviewsAndRatings(String id, String productID, List<ReviewAndRateList> reviews) {
@@ -19,6 +20,7 @@ public class ReviewsAndRatings {
 		this.productID = productID;
 		this.reviews = reviews;
 	}
+
 
 	public String getId() {
 		return id;

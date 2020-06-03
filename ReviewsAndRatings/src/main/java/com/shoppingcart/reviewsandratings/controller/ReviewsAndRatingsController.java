@@ -107,6 +107,7 @@ public class ReviewsAndRatingsController {
 		}
 	}
 
+	//Gets user details from user service
 	public String getUserDetails() {
 
 		try {
@@ -127,6 +128,7 @@ public class ReviewsAndRatingsController {
 		}
 
 	}
+	
 	
 	@SuppressWarnings("unchecked")
 	private JSONObject ResponseGenerator(int code, HttpStatus type, String message) {

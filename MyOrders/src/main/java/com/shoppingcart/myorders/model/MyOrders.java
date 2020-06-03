@@ -14,15 +14,13 @@ public class MyOrders {
 	private String id;
 	private String userid;
 	private List<Products> products;
-	private float grandTotal;
 	private Date productOrderTime;
 	
-	public MyOrders(String id, String userid, List<Products> products, float grandTotal, Date productOrderTime) {
+	public MyOrders(String id, String userid, List<Products> products, Date productOrderTime) {
 		super();
 		this.id = id;
 		this.userid = userid;
 		this.products = products;
-		this.grandTotal = grandTotal;
 		this.productOrderTime = productOrderTime;
 	}
 
@@ -43,12 +41,6 @@ public class MyOrders {
 	}
 	public void setProduct(List<Products> products) {
 		this.products = products;
-	}
-	public float getGrandTotal() {
-		return grandTotal;
-	}
-	public void setGrandTotal(float grandTotal) {
-		this.grandTotal = grandTotal;
 	}
 	public Date getProductOrderTime() {
 		return productOrderTime;

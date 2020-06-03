@@ -50,7 +50,8 @@ public class OrdersController {
 	
 	Dotenv dotenv = Dotenv.load();
 
-	@CrossOrigin(origins="http://localhost:4200")
+	//@CrossOrigin(origins="http://18.216.50.193")
+	@CrossOrigin
 	@PostMapping("/orders")
 	@ApiOperation(value="Inserts Orders ordered by customer into Orders Repository",
 				  notes = "Customer ID should be provided from token passed as header",	
@@ -84,7 +85,7 @@ public class OrdersController {
 //		System.out.println(dbResponse);
 //	}
 	
-	@CrossOrigin(origins="http://localhost:4200")
+	@CrossOrigin
 	@GetMapping("/orders")
 	@ApiOperation(value="Gets all orders sorted by last ordered time",
 	  notes = "Customer ID should be provided from token passed as header")
@@ -97,7 +98,7 @@ public class OrdersController {
 	//Decoding JSON Token
 	public String getUserIDFromToken() {
 		try {
-
+			//dotenv.get("ACCESS_TOKEN_SECRET")
 		    Jws<Claims> JsonValue = Jwts.parser()
 			.setSigningKey(dotenv.get("ACCESS_TOKEN_SECRET").getBytes("UTF-8"))
 			.parseClaimsJws(request.getHeader("authorization"));
