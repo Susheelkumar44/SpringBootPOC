@@ -13,6 +13,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -27,10 +28,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.shoppingcart.reviewsandratings.model.Response;
 import com.shoppingcart.reviewsandratings.model.ReviewAndRateList;
 import com.shoppingcart.reviewsandratings.model.ReviewsAndRatings;
 import com.shoppingcart.reviewsandratings.model.UserDetails;
+import com.shoppingcart.reviewsandratings.service.CallToUserService;
 import com.shoppingcart.reviewsandratings.service.ReviewsAndRatingsService;
 
 import io.github.cdimascio.dotenv.Dotenv;
@@ -47,12 +50,18 @@ public class ReviewsAndRatingsController {
 	@Autowired
 	private ReviewsAndRatingsService reviewService;
 	@Autowired
+	private CallToUserService callToUserService;
+	@Autowired
 	private RestTemplate restTemplate;
 	@Autowired
 	private HttpServletRequest request;
 	@Autowired
 	private HttpServletResponse response;
+	
+	@Value("${user-service-url}")
+	private String userServiceURL;
 
+	
 	JSONObject responseObj = new JSONObject();
 
 	Dotenv dotenv = Dotenv.load();
@@ -66,7 +75,13 @@ public class ReviewsAndRatingsController {
 			@RequestBody ReviewAndRateList reviews) {
 		String userID = this.getUserIDFromToken();
 		reviews.setUserID(userID);
-		reviews.setUsername(this.getUserDetails());
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+		headers.add("Authorization", "Bearer " + request.getHeader("authorization"));
+		System.out.println("Headers set are: " + headers);
+		reviews.setUsername(callToUserService.getUserDetails(headers));
+		
 		int responseReturned = reviewService.insertReview(reviews, productID);
 		System.out.println("responseReturned :"+responseReturned);
 		if (responseReturned == 0) {
@@ -107,27 +122,34 @@ public class ReviewsAndRatingsController {
 		}
 	}
 
-	//Gets user details from user service
-	public String getUserDetails() {
-
-		try {
-			HttpHeaders headers = new HttpHeaders();
-			headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-			headers.add("Authorization", "Bearer " + request.getHeader("authorization"));
-			System.out.println("Headers set are: " + headers);
-			HttpEntity<UserDetails> entity = new HttpEntity<UserDetails>(headers);
-			ResponseEntity<UserDetails> userDetails = restTemplate.exchange("http://localhost:1235/user",
-					HttpMethod.GET, entity, UserDetails.class);
-			System.out.println("Data from user service: " + userDetails.getBody().getFirstName() + " "
-					+ userDetails.getBody().getLastName());
-
-			return (userDetails.getBody().getFirstName() + " " + userDetails.getBody().getLastName());
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-			return null;
-		}
-
-	}
+//	//Gets user details from user service
+//	@HystrixCommand(fallbackMethod = "getUserDetailsFallback")
+//	public String getUserDetails() {
+//
+//		try {
+//			HttpHeaders headers = new HttpHeaders();
+//			headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+//			headers.add("Authorization", "Bearer " + request.getHeader("authorization"));
+//			System.out.println("Headers set are: " + headers);
+//			HttpEntity<UserDetails> entity = new HttpEntity<UserDetails>(headers);
+//			ResponseEntity<UserDetails> userDetails = restTemplate.exchange(userServiceURL,
+//					HttpMethod.GET, entity, UserDetails.class);
+//			System.out.println("Data from user service: " + userDetails.getBody().getFirstName() + " "
+//					+ userDetails.getBody().getLastName());
+//			
+//
+//			return (userDetails.getBody().getFirstName() + " " + userDetails.getBody().getLastName());
+//		} catch (Exception e) {
+//			log.error(e.getMessage(), e);
+//			return null;
+//		}
+//
+//	}
+//	
+//	public String getUserDetailsFallback() {
+//		//Here You can get the name stored in cache because of previous request, throw error or You can just set default name
+//		return "Default Name";
+//	}
 	
 	
 	@SuppressWarnings("unchecked")
